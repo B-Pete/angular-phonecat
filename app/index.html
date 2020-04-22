@@ -1,14 +1,28 @@
 <!doctype html>
-<html lang="en" ng-app>
+<html ng-app="phonecatApp">
   <head>
     <meta charset="utf-8">
     <title>My HTML File</title>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
     <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-resource/angular-resource.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script>
+    <script src="core/core.module.js"></script>
+    <script src="app.module.js"></script>
+    <script src="app.config.js"></script>
+    <script src="phone-list.component.js"></script>
+    <script src="/phone-list-component/phone-list.component.js"></script>
+    <script src="/phone-list-module/phone-list.module.js"></script>
+    <script src="/phone-list-module/phone-list.component.js"></script>
+    <script src="/phoneDetail/phoneDetail.module.js"></script>
+    <script src="/phoneDetail/phoneDetail.component.js"></script>
+    <script src="core/phone/phone.module.js"></script>
+    <script src="core/phone/phone.service.js"></script>
   </head>
   <body>
-
-    <p>Nothing here {{'yet' + '!'}}</p>
-
+    <div ng-view></div>
+  <!-- Use a custom component to render a list of phones -->
+  <!-- This tells AngularJS to instantiate a `phoneList` component here. -->
+  
   </body>
 </html>
