@@ -1,19 +1,24 @@
 angular.module('core.keycloak', [])
-.factory('keycloak', (Auth) => {
-    var keycloakAuth = Auth.authz;
+.factory('keycloakService', (Auth) => {
     var self = this;
-    var auth = {};
+    self.auth = Auth;
 
-    self.kc = function() {
-        return keycloakAuth;
-    };
-
-    self.checkLogin = function() {
-        return keycloakAuth.init({onLoad: 'check-sso', silentCheckSsoRedirectUri: window.location.origin + '/app.html'});
-    };
-
+    var authenticator = Auth.authz;
     self.doLogin = function() {
-        return keycloakAuth.init({ onLoad: 'login-required'});
+        return authenticator.init({ onLoad: 'login-required'
+        }).then((authenticated) => {
+            Auth.loggedIn = authenticated;
+        }).catch((e) => {
+            console.log("Error thrown in login: " + e);
+        });
+    };
+
+
+    self.doLogout = function () {
+        console.log('*** LOGOUT');
+        Auth.loggedIn = false;
+        Auth.authz.logout();
+        Auth.authz = null;
     };
 
     return self;

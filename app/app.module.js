@@ -9,25 +9,22 @@ var module = angular.module('phonecatApp', [
 
 ])
 
-.controller('GlobalCtrl', ($scope, keycloak, Auth) => {
-    console.log('Authenticated: ' + Auth.loggedIn);
-    $scope.logoutKeycloak = logout;
-    $scope.auth = Auth;
+.controller('GlobalCtrl', ($scope, keycloakService) => {
+    $scope.auth = keycloakService.auth;
+    console.log('Authenticated: ' + $scope.auth.loggedIn);
 
-    $scope.loginKeycloak = function () {
-        keycloak.doLogin()
-            .then((authenticated) => {
-                $scope.auth.loggedIn = authenticated;
-                $scope.auth.authz = keycloakAuth;
-            }).catch((e) => {
-                console.log("Error thrown in login: " + e)
-            });
+    $scope.logoutKeycloak = function () {
+        keycloakService.doLogout();
+    };
+
+    $scope.loginKeycloak = function() {
+        keycloakService.doLogin();
     };
 
     $scope.direction = 'login.html';
     function setDirection() {
         $scope.direction = $scope.auth.loggedIn ? '/app.html' : 'login.html';
-    }
+    };
 
     $scope.$watch('auth', function () {
         if ($scope.auth.loggedIn === true || $scope.auth.loggedIn === false) {
@@ -36,17 +33,8 @@ var module = angular.module('phonecatApp', [
     });
 })
 
-
-var auth = {};
-var logout = function() {
-    console.log('*** LOGOUT');
-    auth.loggedIn = false;
-    auth.authz.logout();
-    auth.authz = null;
-    // window.location = auth.logoutUrl;
-};
-
 angular.element(document).ready(function ($http) {
+    var auth = {};
     var keycloakAuth = new Keycloak('keycloak.json');
     auth.loggedIn = false;
 
@@ -59,7 +47,7 @@ angular.element(document).ready(function ($http) {
       angular.bootstrap(document, ["phonecatApp"]);
     }).catch((e) => {
         console.log("Error thrown in init: " + e)
-        // window.location.reload();
+        window.location.reload();
     });
-    });
+});
 
