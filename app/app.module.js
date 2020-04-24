@@ -9,10 +9,10 @@ var module = angular.module('phonecatApp', [
 
 ])
 
-.controller('GlobalCtrl', ($scope, keycloakService) => {
-    $scope.auth = keycloakService.auth;
+.controller('GlobalCtrl', ($scope, Auth, keycloakService) => {
+    $scope.auth = Auth;
     console.log('Authenticated: ' + $scope.auth.loggedIn);
-
+    
     $scope.logoutKeycloak = function () {
         keycloakService.doLogout();
     };
@@ -21,9 +21,9 @@ var module = angular.module('phonecatApp', [
         keycloakService.doLogin();
     };
 
-    $scope.direction = 'login.html';
+    $scope.direction = './login.html';
     function setDirection() {
-        $scope.direction = $scope.auth.loggedIn ? '/app.html' : 'login.html';
+        $scope.direction = $scope.auth.loggedIn ? './app.html' : './login.html';
     };
 
     $scope.$watch('auth', function () {
@@ -32,22 +32,4 @@ var module = angular.module('phonecatApp', [
         }
     });
 })
-
-angular.element(document).ready(function ($http) {
-    var auth = {};
-    var keycloakAuth = new Keycloak('keycloak.json');
-    auth.loggedIn = false;
-
-    keycloakAuth.init({onLoad: 'check-sso'}).then((authenticated) => {
-        auth.loggedIn = authenticated;
-        auth.authz = keycloakAuth;
-        module.factory('Auth', function() {
-            return auth;
-        });
-      angular.bootstrap(document, ["phonecatApp"]);
-    }).catch((e) => {
-        console.log("Error thrown in init: " + e)
-        window.location.reload();
-    });
-});
 

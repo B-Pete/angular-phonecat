@@ -1,18 +1,16 @@
 angular.module('core.keycloak', [])
 .factory('keycloakService', (Auth) => {
     var self = this;
-    self.auth = Auth;
 
-    var authenticator = Auth.authz;
     self.doLogin = function() {
-        return authenticator.init({ onLoad: 'login-required'
+        return Auth.authz.init({ onLoad: 'login-required'
         }).then((authenticated) => {
             Auth.loggedIn = authenticated;
         }).catch((e) => {
-            console.log("Error thrown in login: " + e);
+            Auth.loggedIn = false;
+            console.log("Error thrown in doLogin: " + e);
         });
     };
-
 
     self.doLogout = function () {
         console.log('*** LOGOUT');
